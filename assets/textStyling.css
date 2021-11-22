@@ -1,0 +1,13 @@
+
+
+.title {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 50px;
+    color: blueviolet;
+    font-weight: bold;
+    padding-bottom: 10px;
+}
+
+.backdrop{
+    background-image: './assets/background.png';
+}
