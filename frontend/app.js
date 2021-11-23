@@ -9,24 +9,20 @@ import {
   Button,
   TouchableOpacity,
 } from "react-native";
-import logo from './assets/QU3ST2.png';
-import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 
 export default function App() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   return (
-    <View style={styles.wrap}>
+    <View style={styles.container}>
+      <Image style={styles.image} source={require("./assets/icon.png")} />
 
       <StatusBar style="auto" />
-
-      <Image source={logo} style={{ width: 750, height: 300 }} /> 
-
       <View style={styles.inputView}>
         <TextInput
           style={styles.TextInput}
-          placeholder="email"
+          placeholder="Email."
           placeholderTextColor="#003f5c"
           onChangeText={(email) => setEmail(email)}
         />
@@ -35,7 +31,7 @@ export default function App() {
       <View style={styles.inputView}>
         <TextInput
           style={styles.TextInput}
-          placeholder="password"
+          placeholder="Password."
           placeholderTextColor="#003f5c"
           secureTextEntry={true}
           onChangeText={(password) => setPassword(password)}
@@ -61,44 +57,34 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 
-  wrap:{
-    align: "center",
-    backgroundColor:"#a6dee3",
-    alignItems: "center",
-    justifyContent: "center",
-    flex: "1",
-  },
-
   image: {
     marginBottom: 40,
-    width: 300,
-    height: 100,
   },
 
   inputView: {
     backgroundColor: "#FFC0CB",
     borderRadius: 30,
-    width: "30%",
+    width: "70%",
     height: 45,
     marginBottom: 20,
+
     alignItems: "center",
   },
 
   TextInput: {
     height: 50,
     flex: 1,
-    textAlign: 'center',
+    padding: 10,
+    marginLeft: 20,
   },
 
   forgot_button: {
     height: 30,
-    paddingTop: 20,
     marginBottom: 30,
-    alignItems: 'center',
   },
 
   loginBtn: {
-    width: "40%",
+    width: "80%",
     borderRadius: 25,
     height: 50,
     alignItems: "center",
