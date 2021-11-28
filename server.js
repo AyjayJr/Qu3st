@@ -185,7 +185,7 @@ app.post('/api/login', async (req, res, next) => 
         },
         onSuccess: data => 
         {   
-            const ret = {FirstName:fn, LastName:ln, Token:data};
+            const ret = {FirstName:fn, LastName:ln, Token:data.idToken.jwtToken};
 
             if(results.length == 0)
             {
