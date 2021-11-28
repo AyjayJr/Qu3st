@@ -19,10 +19,10 @@ const url = 'mongodb+srv://Ron:ronronjesusron@taskapp.zgb31.mongodb.net/Quest?re
 const client = new MongoClient(url);
 client.connect();
 
+//May need    \"npm run frontend\"     in package.json
 
 const POOL_ID = 'us-east-2_KTrnylnKo'
 const CLIENT_ID = '7n9tcm4ftueb79i4emtoef12kj'
-//const tokenKey = 't0qC5-BPQGFoGTVTxaY4fkyzF9u99mzkxkBHREfjZevEoBQyMJeX8-hO3XkHB69_pcgGHBmErR2I_pn8xPK2hkwQz-piEKyZCEeV4nMai-gZYpmHdeY7s4muTOxsH6Jsdb2FQ90kyhJAiUr9LwcwtqRyb6lBS6aOOimMhpdHwUH8N-JHZIxywIIOd7gk0ORqRx2jWln5v-yxdn1kEVe1452zk3vkMnTbqdDSEx4oWBw4JuqVIWdl64yDAg3VfeVQkp3byaZcGeRcr216V8raVgUdF_XxDD49If8gwon3Xr8z3OnfSFp8WEUj-giHtSS5xzWvWQ8pgkfqTsH60IRt4w';
 
 const jwks = jwk.keys[0];
 const tokenKey = jwkToPem(jwks)
@@ -141,7 +141,7 @@ app.post('/api/resendCode', async (req, res, next) => 
 app.post('/api/login', async (req, res, next) => 
 {
     // incoming: email, password
-    // outgoing: id, firstName, lastName, error
+    // outgoing: firstName, lastName, token, error
 
     const {email, password} = req.body;
 
@@ -185,7 +185,7 @@ app.post('/api/login', async (req, res, next) => 
         },
         onSuccess: data => 
         {   
-            const ret = {ID:id, FirstName:fn, LastName:ln, values:data};
+            const ret = {FirstName:fn, LastName:ln, Token:data};
 
             if(results.length == 0)
             {
@@ -224,7 +224,6 @@ app.post('/api/register', async (req, res, next) => 
     
     let idStr = ObjectId(id).toString();
     idStr = idStr.toString();
-    //console.log(idStr);
  
     const emailAtt = new AmazonCognitoIdentity.CognitoUserAttribute('email', email);
     const firstAtt = new AmazonCognitoIdentity.CognitoUserAttribute('given_name', first);
@@ -236,7 +235,10 @@ app.post('/api/register', async (req, res, next) => 
     {
         if(err != null)
         {
-            const result = await db.collection('User').deleteOne({_id: new mongoDB.ObjectId(idStr)}); /////////////////CHECK
+            if(exists == 0)
+            {
+                const result = await db.collection('User').deleteOne({_id: new mongoDB.ObjectId(idStr)});
+            }
             ret = {error:err};
         }
         else
@@ -245,7 +247,6 @@ app.post('/api/register', async (req, res, next) => 
             {
                 try
                 {
-                    //const newUser = {User:email,FirstName:first,LastName:last};
                     const db = client.db();
                     const result = await db.collection('User').updateOne({"_id": new mongoDB.ObjectId(idStr)},{$set: {User:email,FirstName:first,LastName:last}});
                 }
@@ -263,61 +264,3 @@ app.post('/api/register', async (req, res, next) => 
 });
 
 app.listen(5000); // start Node + Express server on port 5000
-
-
-
-
-// app.set('port', PORT);
-//
-// app.use(cors());
-// app.use(bodyParser.json());
-// app.use((req, res, next) =>
-// {
-//   res.setHeader('Access-Control-Allow-Origin', '*');
-//   res.setHeader(
-//     'Access-Control-Allow-Headers',
-//     'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-//   );
-//   res.setHeader(
-//     'Access-Control-Allow-Methods',
-//     'GET, POST, PATCH, DELETE, OPTIONS'
-//   );
-//   next();
-// });
-//
-//
-// if (process.env.NODE_ENV === 'production')
-// {
-//   // Set static folder
-//   app.use(express.static('frontend/build'));
-//   app.get('*', (req, res) =>
-//  {
-//     res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
-//   });
-// }
-
-// require('dotenv').config();
-/*
-async function main(){
-
-const url = "mongodb+srv://Ron:ronronjesusron@taskapp.zgb31.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
-const client = new MongoClient(url);
-
-  try {
-    await client.connect();
-
-    await listDatabases(client);
-
-  } catch (e){
-    console.error(e);
-  } finally {
-    await client.close();
-  }
-}
-async function listDatabases(client){
-    databasesList = await client.db().admin().listDatabases();
-
-    console.log("Databases:");
-    databasesList.databases.forEach(db => console.log(` - ${db.name}`));
-};
-*/
