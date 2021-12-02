@@ -25,25 +25,45 @@ app.use((req, res, next) =>
   next();
 });
 
+app.get("/api", (req, res) => {
+  res.json({ message: "Database working?" });
+});
 
-if (process.env.NODE_ENV === 'production')
-{
-  // Set static folder
-  app.use(express.static('frontend/build'));
-  app.get('*', (req, res) =>
- {
-    res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
-  });
-}
 
-require('dotenv').config();
-const url = process.env.MONGODB_URI;
-const client = new MongoClient(url);
+app.listen(5000); 
 
-try {
-  await client.connect();
-} catch (e){
-  console.error(e);
-} finally {
-  await client.close();
-}
+// require('dotenv').config();
+// async function main(){
+
+// const url = "mongodb+srv://Ron:ronronjesusron@taskapp.zgb31.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+// const client = new MongoClient(url);
+
+//   try {
+//     await client.connect();
+
+    
+//     await listDatabases(client);
+//     fs.readFile('./frontend/src/App.html', function (err, html) {
+
+//       if (err) throw err;    
+  
+//       http.createServer(function(request, response) {  
+//           response.writeHeader(200, {"Content-Type": "text/html"});  
+//           response.write(html);  
+//           response.end();  
+//       }).listen(PORT);
+//   });
+
+//   } catch (e){
+//     console.error(e);
+//   } finally {
+//     await client.close();
+//   }
+// }
+
+// async function listDatabases(client){
+//     databasesList = await client.db().admin().listDatabases();
+
+//     console.log("Databases:");
+//     databasesList.databases.forEach(db => console.log(` - ${db.name}`));
+// };
