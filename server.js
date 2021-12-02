@@ -6,6 +6,8 @@ const jwkToPem = require('jwk-to-pem');
 const path = require('path');
 const PORT = process.env.PORT || 5000;
 const app = express();
+app.set('port', (process.env.PORT || 5000));
+
 const MongoClient = require('mongodb').MongoClient;
 const mongoDB = require('mongodb');
 const AmazonCognitoIdentity = require('amazon-cognito-identity-js-node');
@@ -138,120 +140,6 @@ app.post('/api/resendCode', async (req, res, next) => 
     
 });
 
-app.post('/api/resetPassword', async (req, res, next) => 
-{
-    // incoming: email
-    // outgoing: error
-
-    const {email} = req.body;
-
-    const userData = {
-        Username: email,
-        Pool: cogAccount
-    };
-
-    const cogUser = new AmazonCognitoIdentity.CognitoUser(userData);
-
-    cogUser.forgotPassword({
-        onFailure: err =>
-        {
-            const ret = {error:err};
-
-            res.status(200).json(ret);
-        },
-        onSuccess: data => 
-        { 
-            const ret = {data:data};
-
-            res.status(200).json(ret);
-        }
-    });
- 
-});
-
-app.post('/api/confirmPassword', async (req, res, next) => 
-{
-    // incoming: email, newpassword, code
-    // outgoing: error
-
-    const {email, newpassword, code} = req.body;
-
-    const userData = {
-        Username: email,
-        Pool: cogAccount
-    };
-
-    const cogUser = new AmazonCognitoIdentity.CognitoUser(userData);
-
-    cogUser.confirmPassword(code, newpassword,{
-        onFailure: err =>
-        {
-            const ret = {error:err};
-
-            res.status(200).json(ret);
-        },
-        onSuccess: data => 
-        { 
-            const ret = {data:data};
-
-            res.status(200).json(ret);
-        }
-    });
- 
-});
-
-app.post('/api/changePassword', async (req, res, next) => 
-{
-    // incoming: email, oldpassword, newpassword
-    // outgoing: error
-
-    const {email, oldpassword, newpassword, code} = req.body;
-
-    const loginInfo = {
-        Username: email, 
-        Password: oldpassword
-    };
-
-    const authData = new AmazonCognitoIdentity.AuthenticationDetails(loginInfo);
-
-    const userData = {
-        Username: email,
-        Pool: cogAccount
-    };
-
-    const cogUser = new AmazonCognitoIdentity.CognitoUser(userData);
-
-    cogUser.authenticateUser(authData, 
-    {
-        onFailure: err =>
-        {
-            const ret = {error:err};
-
-            res.status(200).json(ret);
-        },
-        onSuccess: data => 
-        {   
-            cogUser.changePassword(oldpassword, newpassword, (errPass) => 
-            {
-                if(errPass != null)
-                {
-                    const ret = {error:errPass};
-
-                    res.status(200).json(ret);
-                }
-                else
-                {
-                    const ret = {error:errPass};
-                    
-                    res.status(200).json(ret);
-                }
-            });
-        }
-    });
-    
-
-});
-
 app.post('/api/login', async (req, res, next) => 
 {
     // incoming: email, password
@@ -377,4 +265,8 @@ app.post('/api/register', async (req, res, next) => 
     });
 });
 
-app.listen(5000); // start Node + Express server on port 5000
+app.listen(PORT, () => 
+{
+  console.log('Server listening on port ' + PORT);
+});
+ // start Node + Express server on port 5000
