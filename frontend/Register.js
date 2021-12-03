@@ -8,29 +8,32 @@ import {
   TextInput,
   Button,
   TouchableOpacity,
+  ImageBackground,
 } from "react-native";
 import logo from './assets/QU3ST2.png';
+import bg from './assets/background.png';
 import textStyling from './src/textStyling.css';
 
-export default function App() {
+export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   return (
     <View style={styles.wrap}>
+        <ImageBackground source={bg} style={{width: '100%', height: '100%', alignItems: 'center'}}>
 
       <StatusBar style="auto" />
 
-      <View style={[styles.regBox, textStyling.bg]}>
+      <View style={[styles.regBox, {justifyContent: 'center'}]}>
 
       <div className="regTitle">The Journey begins...</div>
 
       <View style={styles.inputView}>
         <TextInput
           style={styles.TextInput}
-          placeholder="Username"
+          placeholder="Email"
           placeholderTextColor="#003f5c"
-          onChangeText={(username) => setEmail(username)}
+          onChangeText={(email) => setEmail(email)}
         />
       </View>
 
@@ -54,23 +57,15 @@ export default function App() {
         />
       </View>
 
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.TextInput}
-          placeholder="Email"
-          placeholderTextColor="#003f5c"
-          onChangeText={(email) => setEmail(email)}
-        />
-      </View>
-
-      <TouchableOpacity style={styles.loginBtn}>
+      <TouchableOpacity style={[styles.loginBtn, styles.shadowProp]}>
         <Text style={styles.buttonText}>Embark!</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.nvm}>
-        <Text style={{fontFamily: "times", color: "#E5A4CB"}}>Return to Login</Text>
+      <TouchableOpacity style={[styles.nvm, styles.shadowProp]}>
+        <Text style={{fontFamily: "Garamond, serif", color: "#FFFFFF"}}>Return to Login</Text>
       </TouchableOpacity>
       </View>
+      </ImageBackground>
     </View>
   );
 }
@@ -91,16 +86,15 @@ const styles = StyleSheet.create({
   },
 
   regBox:{
-    align: "center",
-    backgroundColor: "#FBE8B3",
-    borderColor : "#C92D2D",
-    borderWidth : 3,
-    alignItems: "center",
-    justifyContent: "center",
-    height: "90%",
-    padding: "10",
-    width: "60%",
-    borderRadius: "10%",
+  backgroundColor: "#FBE8B3",
+  borderRadius: 25,
+  width: 800,
+  marginTop: 30,
+  height: "90%",
+  alignItems: "center",
+  borderColor : "#C92D2D",
+  borderWidth: 4,
+  overflow: "hidden",
   },
 
   image: {
@@ -110,14 +104,11 @@ const styles = StyleSheet.create({
   },
 
   inputView: {
-    backgroundColor: "#E5A4CB",
-    borderColor : "#45062e",
-    borderWidth : 2,
-    borderRadius: 20,
-    margin: 10,
+    backgroundColor: "#A1869E",
+    borderRadius: 30,
     width: "30%",
     height: 45,
-    marginBottom: 20,
+    margin: 18,
     alignItems: "center",
   },
 
@@ -128,10 +119,10 @@ const styles = StyleSheet.create({
   },
 
   buttonText: {
-    fontFamily: "Times",
+    fontFamily: "Garamond, serif",
     fontWeight: "bold",
+    color: "white",
     fontSize: 30,
-    color: "#E5A4CB",
   },
 
   forgot_button: {
@@ -147,8 +138,8 @@ const styles = StyleSheet.create({
     height: 50,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 40,
-    backgroundColor: "#45062e",
+    marginTop: 20,
+    backgroundColor: "#797596",
   },
 
   nvm: {
@@ -158,6 +149,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginTop: 30,
-    backgroundColor: "#45062e",
+    backgroundColor: "#797596",
   },
+
+  shadowProp: {
+    shadowColor: '#171717',
+    shadowOffset: {width: -2, height: 4},
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+  },
+
 });
