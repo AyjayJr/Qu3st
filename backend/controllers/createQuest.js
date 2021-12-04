@@ -1,12 +1,10 @@
 import jwt from "jsonwebtoken";
 import quest from "../models/quest";
 
-export default async function (req, res, next) {
-  if (!req.body) {
-    return res.status(400).json({
-      error: "empty list",
-    });
-  }
+export default async function (req, res) {
+  if (!req.body)
+    return res.status(400).json({error: "We need input to create your quest",});
+  
 
   jwt.verify(req.body.token, process.env.LOGIN_KEY, async (err, decoded) => {
     if (err)
@@ -20,7 +18,7 @@ export default async function (req, res, next) {
             urgency: req.body.urgency,
             xpTotal: req.body.xpTotal,
             due: req.body.due,
-            tasks: req.body.task,
+            tasks: req.body.tasks,
             user_id: decoded.id,
             isFinished: req.body.isFinished,
          });
@@ -30,33 +28,9 @@ export default async function (req, res, next) {
              res.json({
                  id: data.id
              });
-         })
-         .catch(err => {
-             res.status(500).json({
-                 error: err.message
-             });
+         }).catch(err => {
+             res.status(500).json({error: err.message});
          });
 
-    // var error = "";
-
-    // try {
-    //   const db = client.db();
-    //   const result = await db.collection("Quest").insertOne(newQuest);
-    //   id = result.insertedId;
-    // } catch (e) {
-    //   error = e.toString();
-    // }
-
-    // let idStr = ObjectId(id).toString();
-    // idStr = idStr.toString();
-
-    // const db = client.db();
-    // const addToUser = await db
-    //   .collection("User")
-    //   .updateOne({ _id: user_id }, { $addToSet: { quests: idStr } });
-
-    // var ret = { error: error };
-
-    // res.status(200).json(ret);
   });
 }
