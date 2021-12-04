@@ -7,7 +7,7 @@ export default async function (req, res) {
 
     jwt.verify(req.body.token, process.env.LOGIN_KEY, (err, decoded) => {
         if (err)
-            return res.status(400).json({ error: "unauthorized access" });
+            return res.status(400).json({ error: "Access not granted." });
         quest.find({ Title: { $regex: `(?i)${search}` }, UserId: decoded.id })
         .then(quest => {
 

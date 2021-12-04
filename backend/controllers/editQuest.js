@@ -35,7 +35,7 @@ export default async function(req, res) {
 
     jwt.verify(token, process.env.LOGIN_KEY, (err, decoded) => {
         if (err)
-            return res.status(400).json({error: "Uauthorized access"});
+            return res.status(400).json({ error: "Access not granted." });
 
         quest.findOneAndUpdate({_id: id, user_id: decoded.id}, {name: name, type: type, urgency: urgency,
                                 xpTotal: xpTotal, due: due, tasks: tasks, user_id: user_id, isFinished: isFinished})
@@ -47,8 +47,6 @@ export default async function(req, res) {
 
                 res.send({message: "Quest updated"});
             }).catch(err => {
-                if (err.path === "_id")
-                    return res.status(500).send({ error: `Cannot find list with id '${id}'`});
                 res.status(500).send({ error: err.message });
             });
     });

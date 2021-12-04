@@ -9,7 +9,7 @@ export default async function (req, res) {
   jwt.verify(req.body.token, process.env.LOGIN_KEY, async (err, decoded) => {
     if (err)
     return res.status(400).json({
-        error: "unauthorized access"
+        error: "Access not granted."
     });
 
     const quest = new quest({
@@ -32,5 +32,26 @@ export default async function (req, res) {
              res.status(500).json({error: err.message});
          });
 
+    // var error = "";
+
+    // try {
+    //   const db = client.db();
+    //   const result = await db.collection("Quest").insertOne(newQuest);
+    //   id = result.insertedId;
+    // } catch (e) {
+    //   error = e.toString();
+    // }
+
+    // let idStr = ObjectId(id).toString();
+    // idStr = idStr.toString();
+
+    // const db = client.db();
+    // const addToUser = await db
+    //   .collection("User")
+    //   .updateOne({ _id: user_id }, { $addToSet: { quests: idStr } });
+
+    // var ret = { error: error };
+
+    // res.status(200).json(ret);
   });
 }
