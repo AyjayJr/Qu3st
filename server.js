@@ -96,6 +96,34 @@ app.post('/api/authTest', auth, async (req, res, next) => 
     res.status(200).json(ret);
 });
 
+app.post('/api/createQuest', auth, async (req, res, next) => 
+{
+    let userId = req.ID;
+
+    const quest = {
+        name: req.body.name,
+        type: req.body.type,
+        urgency: req.body.urgency,
+        xpTotal: req.body.xpTotal,
+        due: req.body.due,
+        tasks: req.body.tasks,
+        user_id: userId,
+        isFinished: req.body.isFinished,
+    };
+    
+    const db = client.db();
+    const result = await db.collection('Quest').insertOne(quest);
+    id = result.insertedId;
+
+    let idStr = ObjectId(id).toString();
+    idStr = idStr.toString();
+
+    const resultUser = await db.collection('User').updateOne({"_id": new mongoDB.ObjectId(userId)},{$addToSet: {quests: idStr}});
+   
+    const ret = {error:""};
+    res.status(200).json(ret); 
+});
+
 app.post('/api/confirm', async (req, res, next) => 
 {
     // incoming: email, code
