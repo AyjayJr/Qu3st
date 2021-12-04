@@ -1,6 +1,6 @@
 import { Router } from 'express';
 const router = Router();
-// const auth = require('../middleware/authenticate')
+// may need to implement a const auth = require('../authenticate');
 
 import { createQuest } from '../controllers/createQuest';
 import { deleteQuest } from '../controllers/deleteQuest';
