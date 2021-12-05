@@ -191,6 +191,28 @@ app.post('/api/updateQuest', auth, async (req, res, next) => {
 
 });
 
+app.post('/api/listQuests', auth, async (req, res, next) => {
+
+    let userId = req.ID;
+    let ret = "";
+
+    try
+    {
+        const db = client.db();
+        const result = await db.collection('User').findOne({'_id': new mongoDB.ObjectId(userId)});
+        console.log(result);
+        ret = {error: "", quests: result.quests};
+    }
+    catch(e)
+    {
+        console.log("error");
+        ret = {error: e};
+    }
+
+    res.status(200).json(ret);
+
+});
+
 app.post('/api/confirm', async (req, res, next) => 
 {
     // incoming: email, code
