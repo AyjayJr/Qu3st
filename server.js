@@ -99,6 +99,7 @@ app.post('/api/authTest', auth, async (req, res, next) => 
 app.post('/api/createQuest', auth, async (req, res, next) => 
 {
     let userId = req.ID;
+    let err = ""
 
     const quest = {
         name: req.body.name,
@@ -110,18 +111,47 @@ app.post('/api/createQuest', auth, async (req, res, next) => 
         user_id: userId,
         isFinished: req.body.isFinished,
     };
-    
-    const db = client.db();
-    const result = await db.collection('Quest').insertOne(quest);
-    id = result.insertedId;
 
-    let idStr = ObjectId(id).toString();
-    idStr = idStr.toString();
+    try
+    {
+        const db = client.db();
+        const result = await db.collection('Quest').insertOne(quest);
+        id = result.insertedId;
 
-    const resultUser = await db.collection('User').updateOne({"_id": new mongoDB.ObjectId(userId)},{$addToSet: {quests: idStr}});
-   
-    const ret = {error:""};
+        let idStr = ObjectId(id).toString();
+        idStr = idStr.toString();
+
+        const resultUser = await db.collection('User').updateOne({"_id": new mongoDB.ObjectId(userId)},{$addToSet: {quests: idStr}});
+    }
+    catch(e)
+    {
+        err = e.toString()
+    }
+    const ret = {error:err};
     res.status(200).json(ret); 
+});
+
+app.post('/api/deleteQuest', auth, async (req, res, next) => {
+    let userId = req.ID;
+    let err = ""
+
+    const questId = req.body.id;
+
+    try
+    {
+        const db = client.db();
+        const result = await db.collection('Quest').deleteOne({"_id": new mongoDB.ObjectId(questId)});
+
+        const resultUser = await db.collection('User').updateOne({"_id": new mongoDB.ObjectId(userId)},{$pull: {"quests": questId}});
+    }
+    catch(e)
+    {
+        err = e.toString()
+    }
+
+    const ret = {error:err};
+    res.status(200).json(ret);
+
 });
 
 app.post('/api/confirm', async (req, res, next) => 
