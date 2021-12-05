@@ -107,7 +107,6 @@ app.post('/api/createQuest', auth, async (req, res, next) => 
         urgency: req.body.urgency,
         xpTotal: req.body.xpTotal,
         due: req.body.due,
-        tasks: null,
         userId: userId,
         isFinished: req.body.isFinished,
     };
@@ -171,7 +170,6 @@ app.post('/api/updateQuest', auth, async (req, res, next) => {
     const urgency = req.body.urgency;
     const xpTotal = req.body.xpTotal;
     const due = req.body.due;
-    const tasks = req.body.tasks;
     const isFinished = req.body.isFinished;
 
 
@@ -183,7 +181,7 @@ app.post('/api/updateQuest', auth, async (req, res, next) => {
         {
             const result = await db.collection('Quest').updateOne({"_id": new mongoDB.ObjectId(questId)},{
                 $set: {'name': name, 'type': type, 'urgency': urgency, 'xpTotal' : xpTotal, 'due' : due, 
-                    'tasks' : tasks, 'isFinished' : isFinished}
+                    'isFinished' : isFinished}
                 });
         }
         else
@@ -253,6 +251,8 @@ app.post('/api/createTask', auth, async (req, res, next) => 
     let userId = req.ID;
     let err = ""
 
+    let questId = req.body.questId;
+
     const quest = {
         name: req.body.name,
         type: req.body.type,
@@ -288,7 +288,6 @@ app.post('/api/deleteTask', auth, async (req, res, next) => {
     let err = ""
 
     const taskId = req.body.id;
-    const questId = req.body.questId;
 
     try
     {
@@ -298,7 +297,7 @@ app.post('/api/deleteTask', auth, async (req, res, next) => {
         {
             const result = await db.collection('Task').deleteOne({"_id": new mongoDB.ObjectId(taskId)});
 
-            const resultUser = await db.collection('Quest').updateOne({"_id": new mongoDB.ObjectId(questId)},{$pull: {"tasks": taskId}});
+            const resultUser = await db.collection('Quest').updateOne({"_id": new mongoDB.ObjectId(lookUp.questId)},{$pull: {"tasks": taskId}});
         }
         else
         {
@@ -326,7 +325,6 @@ app.post('/api/updateTask', auth, async (req, res, next) => {
     const urgency = req.body.urgency;
     const xpTotal = req.body.xpTotal;
     const due = req.body.due;
-    const tasks = req.body.tasks;
     const isFinished = req.body.isFinished;
 
 
@@ -336,9 +334,9 @@ app.post('/api/updateTask', auth, async (req, res, next) => {
         const lookUp = await db.collection('Task').findOne({"_id": new mongoDB.ObjectId(taskId)})
         if(lookUp.userId == userId.toString())
         {
-            const result = await db.collection('Quest').updateOne({"_id": new mongoDB.ObjectId(taskId)},{
+            const result = await db.collection('Task').updateOne({"_id": new mongoDB.ObjectId(taskId)},{
                 $set: {'name': name, 'type': type, 'urgency': urgency, 'xpTotal' : xpTotal, 'due' : due, 
-                    'tasks' : tasks, 'isFinished' : isFinished}
+                    'isFinished' : isFinished}
                 });
         }
         else
@@ -400,6 +398,48 @@ app.post('/api/viewTask', auth, async (req, res, next) => {
         ret = {error: e};
     }
 
+    res.status(200).json(ret);
+
+});
+
+app.post('/api/viewUser', auth, async (req, res, next) => {
+
+    let userId = req.ID;
+    let ret = "";
+
+    try
+    {
+        const db = client.db();
+        const result = await db.collection('User').findOne({"_id": new mongoDB.ObjectId(userId)});
+        
+        ret = {error: "", task: result};
+    }
+    catch(e)
+    {
+        ret = {error: e};
+    }
+
+    res.status(200).json(ret);
+});
+
+app.post('/api/updateUser', auth, async (req, res, next) => {
+    let userId = req.ID;
+    let err = ""
+
+    const first = req.body.first;
+    const last = req.body.last;
+
+    try
+    {
+        const db = client.db();
+        const result = await db.collection('User').updateOne({"_id": new mongoDB.ObjectId(userId)},{
+                $set: {'FirstName': first, 'LastName': last}
+            });
+    } catch(e){
+        err = e.toString();
+    }
+
+    const ret = {error:err};
     res.status(200).json(ret);
 
 });
