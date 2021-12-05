@@ -108,7 +108,7 @@ app.post('/api/createQuest', auth, async (req, res, next) => 
         xpTotal: req.body.xpTotal,
         due: req.body.due,
         tasks: req.body.tasks,
-        user_id: userId,
+        userId: userId,
         isFinished: req.body.isFinished,
     };
 
@@ -147,6 +147,43 @@ app.post('/api/deleteQuest', auth, async (req, res, next) => {
     catch(e)
     {
         err = e.toString()
+    }
+
+    const ret = {error:err};
+    res.status(200).json(ret);
+});
+
+app.post('/api/updateQuest', auth, async (req, res, next) => {
+    let userId = req.ID;
+    let err = ""
+
+    const questId = req.body.id;
+    const name = req.body.name;
+    const type = req.body.type;
+    const urgency = req.body.urgency;
+    const xpTotal = req.body.xpTotal;
+    const date = req.body.date;
+    const tasks = req.body.tasks;
+    const isFinished = req.body.isFinished;
+
+
+    try
+    {
+        const db = client.db();
+        const lookUp = await db.collection('Quest').findOne({"_id": new mongoDB.ObjectId(questId)})
+        if(lookUp.userId == userId.toString())
+        {
+            const result = await db.collection('Quest').updateOne({"_id": new mongoDB.ObjectId(questId)},{
+                $set: {'name': name, 'type': type, 'urgency': urgency, 'xpTotal' : xpTotal, 'date' : date, 
+                    'tasks' : tasks, 'userId': userId, 'isFinished' : isFinished}
+                });
+        }
+        else
+        {
+            err = "UserId Does Not Match"
+        }
+    } catch(e){
+        err = e.toString();
     }
 
     const ret = {error:err};
