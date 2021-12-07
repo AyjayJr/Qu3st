@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "MyQuest",
+    "slug": "MyQuest",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "MyQuest"
+}
