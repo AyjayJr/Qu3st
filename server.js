@@ -196,6 +196,55 @@ app.post('/api/updateQuest', auth, async (req, res, next) => {
     res.status(200).json(ret);
 });
 
+app.post('/api/searchQuest', auth, async (req, res, next) => {
+    let userId = req.ID;
+    let ret = "";
+    let err = "";
+    let i = 0;
+    let quests = [];
+    let id = "";
+
+    const urgency = req.body.urgency;
+    const isFinished = req.body.isFinished;
+
+    let searchTerm = {
+        'userId': userId
+    }
+
+    if(urgency != "")
+    {
+        searchTerm = {searchTerm , urgency: urgency};
+    }
+
+    if(isFinished != "")
+    {
+        searchTerm = {searchTerm ,isFinished: isFinished};
+    }
+
+    console.log(searchTerm);
+
+    try
+    {
+        const db = client.db();
+        const lookUp = await db.collection('Quest').find(searchTerm).toArray();
+        
+        for(i = 0; i < lookUp.length; i++)
+        {
+            id = lookUp[i]._id;
+            id = id.toString();   
+            quests.push(id);
+        }  
+        
+        ret = {error: "", quests: quests};
+    } 
+    catch(e){
+        err = e.toString();
+        ret = {error:err};
+    }
+
+    res.status(200).json(ret);
+});
+
 app.post('/api/finishQuest', auth, async (req, res, next) => {
     let userId = req.ID;
     let err = ""
