@@ -1,4 +1,4 @@
-//import { StatusBar } from "expo-status-bar";
+import { StatusBar } from "expo-status-bar";
 import { BrowserRouter as Router, Route, Routes, Redirect, Switch, Link } from 'react-router-dom';
 import React, { useState } from "react";
 import {
@@ -18,7 +18,132 @@ import textStyling from './assets/textStyling.css';
 
 var obj = {email:"",password:""}
 
+let cod = "fish";
+let token = "";
+let questArr = [];
+let curr_quest_id = "";
+let questName = "";
+let description = "";
+let index = 0;
+
 export default function Login() {
+  
+  const getQuests = async event => 
+  {
+    console.log(cod);
+      //event.preventDefault();
+      // FIXME: Pull Login And Password From Our Fields
+      var obj = {};
+      var js = JSON.stringify(obj);
+      try
+      {    
+          //
+          const response = await fetch('https://quest-task.herokuapp.com/api/listQuests',
+              {method:'POST',body:js,headers:{'Content-Type': 'application/json', 'Authorization': token}});
+
+          var res = JSON.parse(await response.text());
+          console.log(res);
+            if( res.error )
+            {
+              console.log("error getting quest id list");
+              console.log(res.error)
+              setErrorMessage(res.error.message);
+            }
+            else
+            {
+                console.log("no error getting quest id list");
+                var hen = res.quests;
+                //var quests = {FirstName:res.FirstName,LastName:res.LastName, Token:res.Token}
+                //localStorage.setItem('quests', JSON.stringify(quests));
+                //console.log(user);
+                // TODO: Route To Dashboard Page And Send User Info
+                // window.location.href = '/';
+                // For Loop To View All Quest IDs
+
+                questArr = [];
+                for (let i = 0; i < hen.length; i++) 
+                {
+                  curr_quest_id = hen[i];
+                  index = i;
+                  viewQuests();
+                }
+                console.log('Quest Array Right Here:');
+                localStorage.setItem('quest_data', JSON.stringify(questArr));
+                console.log(questArr);
+                console.log(localStorage.getItem('quest_data'))
+                  // curr_quest_id = questID[i]
+                  // index = i
+                  // viewQuest (within this we set  = return value)
+            }
+      }
+      catch(e)
+      {
+          alert(e.toString());
+          return;
+      }    
+  };
+  
+  const viewQuests = async event => 
+  {
+    console.log(cod);
+      //event.preventDefault();
+      // FIXME: Pull Login And Password From Our Fields
+      var obj = {id:curr_quest_id};
+      var js = JSON.stringify(obj);
+      console.log("View View");
+      try
+      {    
+          //
+          const response = await fetch('https://quest-task.herokuapp.com/api/viewQuest',
+              {method:'POST',body:js,headers:{'Content-Type': 'application/json', 'Authorization': token}});
+
+          var res = JSON.parse(await response.text());
+          console.log(res);
+            if( res.error )
+            {
+              console.log("error reading quests");
+              console.log(res.error)
+              setErrorMessage(res.error.message);
+            }
+            else
+            {
+                console.log("no error reading quests");
+                console.log(res.quest);
+                var quests = {
+                  name:res.quest.name,
+                  description:res.quest.description, 
+                  id:res.quest._id
+                };
+                localStorage.setItem('quest_reee', JSON.stringify(quests));
+                console.log("Look at me!");
+                console.log(JSON.parse(localStorage.getItem('quest_reee')));
+                questArr.push(quests);
+                questName = res.quest.name;
+                description=res.quest.description;
+                console.log(questName);
+                console.log(description);
+                console.log(questArr);
+
+                localStorage["mydatas"] = JSON.stringify(questArr);
+
+                console.log(JSON.parse(localStorage["mydatas"])); 
+                console.log(JSON.parse(localStorage["mydatas"])[0].id); 
+                localStorage["First_Adress"] = JSON.stringify(JSON.parse(localStorage["mydatas"])[0].id)
+
+                //localStorage.setItem('quests', JSON.stringify(quests));
+                //console.log(user);
+                // TODO: Route To Dashboard Page And Send User Info
+                // window.location.href = '/';
+            }
+      }
+      catch(e)
+      {
+          alert(e.toString());
+          return;
+      }    
+  };
+
+
   const [errorMessage, setErrorMessage] = React.useState("");
   const doRegister = async event => 
   {
@@ -38,7 +163,7 @@ export default function Login() {
       var js = JSON.stringify(obj);
       try
       {    
-          //https
+          //
           const response = await fetch('https://quest-task.herokuapp.com/api/login',
               {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
@@ -52,10 +177,15 @@ export default function Login() {
             else
             {
                 console.log("no error");
-                var user = {FirstName:res.FirstName,LastName:res.LastName, Token:res.Token}
+                var user = {FirstName:res.user.FirstName,LastName:res.user.LastName, Token:res.user.Token}
                 localStorage.setItem('user_data', JSON.stringify(user));
                 console.log(user);
+                token = user.Token;
+                console.log("token");
+                console.log(token);
                 // TODO: Route To Dashboard Page And Send User Info
+                await getQuests();
+                console.log(questArr);
                 window.location.href = '/dash';
             }
       }
@@ -63,7 +193,9 @@ export default function Login() {
       {
           alert(e.toString());
           return;
-      }    
+      }
+      
+      
   };
 
      const [state, setState] = useState(
@@ -79,14 +211,14 @@ export default function Login() {
     const setPassword = (password) => {
       obj.password = password;
     }
-    
+
    return (
 
     <View style={styles.wrap}>
       <ImageBackground source={bg} style={{width: '100%', height: '100%', alignItems: 'center'}}>
 
       <View style={styles.menuWrap}>
-      
+      <StatusBar style="auto" />
 
       <Image source={logo} style={{ width: 750, height: 300 }} /> 
 
@@ -144,7 +276,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
     borderRadius: 25,
     width: 800,
-    height: "90%",
+    height: "95%",
     alignItems: "center",
     borderColor : "#C92D2D",
     borderWidth: 4,

@@ -1,4 +1,4 @@
-//import { StatusBar } from "expo-status-bar";
+import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Routes, Redirect, Switch, Link } from 'react-router-dom';
 import {
@@ -57,11 +57,11 @@ export default function Auth() {
   const goHome = async event => {
     window.location.href = '/..';
   }
-  //Removed <StatusBar style="auto" />
+   
   return (
     <View style={styles.wrap}>
 
-      
+      <StatusBar style="auto" />  
 
       <View style={[styles.regBox, textStyling.bg]}>
         <Image source={logo} style={{ width: 750, height: 300 }} />

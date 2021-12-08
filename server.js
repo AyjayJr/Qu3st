@@ -605,18 +605,8 @@ app.post('/api/register', async (req, res, next) => 
     let id = -1;
 
     const db = client.db();
-    const results = await db.collection('User').find({User:email}).toArray();
-    if(results.length > 0)
-    {
-        exists = 1;
-        id = results[0]._id;
-    }
-    else
-    {
-        const db = client.db();
-        const result = await db.collection('User').insertOne({});
-        id = result.insertedId;
-    }
+    const result = await db.collection('User').insertOne({});
+    id = result.insertedId;
     
     let idStr = ObjectId(id).toString();
     idStr = idStr.toString();
@@ -631,27 +621,21 @@ app.post('/api/register', async (req, res, next) => 
     {
         if(err != null)
         {
-            if(exists == 0)
-            {
-                const result = await db.collection('User').deleteOne({_id: new mongoDB.ObjectId(idStr)});
-            }
+            const result = await db.collection('User').deleteOne({_id: new mongoDB.ObjectId(idStr)});
             ret = {error:err};
         }
         else
         {
-            if(exists == 0)
+            try
             {
-                try
-                {
-                    const db = client.db();
-                    const result = await db.collection('User').updateOne({"_id": new mongoDB.ObjectId(idStr)},{$set: {User:email,FirstName:first,LastName:last}});
-                }
-                catch(e)
-                {
-                    error = e.toString();
-                }
+                const db = client.db();
+                const result = await db.collection('User').updateOne({"_id": new mongoDB.ObjectId(idStr)},{$set: {User:email,FirstName:first,LastName:last}});
             }
-            
+            catch(e)
+            {
+                error = e.toString();
+            }
+                    
             ret = {error:err};
 
         }
