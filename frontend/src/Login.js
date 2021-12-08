@@ -16,8 +16,9 @@ import bg from './assets/background.png';
 import Register from "./register";
 import textStyling from './assets/textStyling.css';
 
+var obj = {email:"",password:""}
+
 export default function Login() {
-  var obj = {email:"",password:""}
   const [errorMessage, setErrorMessage] = React.useState("");
   const doRegister = async event => 
   {
@@ -37,8 +38,8 @@ export default function Login() {
       var js = JSON.stringify(obj);
       try
       {    
-          //
-          const response = await fetch('http://quest-task.herokuapp.com/api/login',
+          //https
+          const response = await fetch('https://quest-task.herokuapp.com/api/login',
               {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
           var res = JSON.parse(await response.text());
@@ -78,86 +79,7 @@ export default function Login() {
     const setPassword = (password) => {
       obj.password = password;
     }
-    // const [message,setMessage] = useState('');
-    // const email = useRef(null);
-    // const pwd = useRef(null);
-    // loginRes = useRef(null);
-    // const usernameMsg = useRef(null);
-    // const userpassMsg = useRef(null);
-
-   //        const handleChange = (e) =>
-  //      {
-    //     setState(
-    //         {
-    //             ...state, 
-    //             [e.target.name]: e.target.value
-    //         }
-    //     )
-    // }
-
-    // function handleSubmit(e) {
-    //     e.preventDefault();
-
-    //     if(state.loginName == "") {
-    //         userpassMsg.current.style.display = "none";
-    //         setMessage('Please provide a username');
-    //         usernameMsg.current.style.display = "none";
-    //         undefined.current.focus();
-    //         return;
-    //     }
-    //     else if (state.loginPassword === "") {
-    //         usernameMsg.current.style.display = "none";
-    //         setMessage('Please provide a password');
-    //         userpassMsg.current.style.display = "inline-block";
-    //         pwd.current.focus();
-    //         return;
-    //     }
-    //     else {
-    //         usernameMsg.current.style.display = "none";
-    //         userpassMsg.current.style.display = "none";
-    //         doLogin(e);
-    //     }
-    // }
-
-    // const doLogin = async event => {
-    //     var obj = {login:state.loginName, password:state.loginPassword};
-    //     var js = JSON.stringify(obj);
-
-    //     var config = {
-    //         method: 'post',
-    //         //url:
-    //         headers: {
-    //             'Content-Type': 'application/json'
-    //         },
-    //         data: js 
-    //     };
-    //    axios(config)
-    //         .then((response) => {
-    //             const res = response.data;
-    //             if (!res) {
-    //                 setMessage('No response from the server...');
-    //                 loginRes.current.style.display = "inline-block";
-    //                 return;
-    //             }
-
-    //             storage.storeToken(res.token);
-
-    //             const firstName = res.first_name;
-    //             const lastName = res.last_name;
-
-    //             const user = {firstName:firstName,lastName:lastName}
-    //             localStorage.setItem('user_data', JSON.stringify(user));
-    //             props.onLogin(true);
-    //         })
-    //         .catch(function (error)  {
-    //             if (error.response) {
-    //                 setMessage(error.response.data?.error);
-    //                 loginRes.current.style.display = "inline-block";
-    //             }
-    //         });
-    // }
-
-    //Removed <StatusBar style="auto" />
+    
    return (
 
     <View style={styles.wrap}>

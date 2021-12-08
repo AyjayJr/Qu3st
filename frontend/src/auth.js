@@ -29,8 +29,8 @@ export default function Auth() {
     // FIXME: Pull Login And Password From Our Fields
     var js = JSON.stringify(obj);
     try {
-      //
-      const response = await fetch('http://quest-task.herokuapp.com/api/confirm',
+      //https
+      const response = await fetch('https://quest-task.herokuapp.com/api/confirm',
         { method: 'POST', body: js, headers: { 'Content-Type': 'application/json'}});
 
       var res = JSON.parse(await response.text());

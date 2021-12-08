@@ -13,10 +13,11 @@ import {
 import logo from './assets/QU3ST2.png';
 import textStyling from './assets/textStyling.css';
 
+var obj = {email:"",password:"",first:"", last:""}
 
 export default function Register() {
   const [errorMessage, setErrorMessage] = React.useState("");
-  var obj = {email:"",password:"",first:"", last:""}
+
   const setemail = (email) => {
     obj.email = email;
   }
@@ -38,8 +39,8 @@ export default function Register() {
       var js = JSON.stringify(obj);
       try
       {    
-          //
-          const response = await fetch('http://quest-task.herokuapp.com/api/register',
+          //https
+          const response = await fetch('https://quest-task.herokuapp.com/api/register',
               {method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
 
           var res = JSON.parse(await response.text());
