@@ -1,0 +1,39 @@
+{
+  "expo": {
+    "name": "2+ Community",
+    "description": "Measure the qualities of public spaces",
+    "slug": "2plus-community",
+    "version": "1.0.0",
+    "orientation": "default",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.measuringplace.twopluscommunity",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyCtLNOBqi_CiYQteBUGKS-8LJOz2jHoUT0"
+        }
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}
